@@ -1,0 +1,257 @@
+.PLAY2048
+...
+[Y1] appv
+L1
+L2
+L3
+...
+.2048
+Data(16,64)->GDB1
+[FFFEFFFFFFFFFFFF000F7FFFFFFFFFFFFFFEF000FFFFFFFFFFFF7FFF000000007FFEFFFFFFFFFFFFF00FF00FF00FF00FF00FF00FFFFFFFFFFFFF7FFE00000000F00FF00FF00FF00FF00FFFFFFFFFFFFF7FFF000F000F000F000F000F000000007FFEFFFFFFFFFFFFF00FFFFFFFFFFFFFFFFFF00FFFFFFFFFFFFF7FFE00000000]
+.BY CLRDRAW
+Data(8,56)->GDB2
+[C0A0C0A0C000A0A04040400000000060808080600080808080E000C0A0C0A0A000C0A0A0A0C000C0A0C0A0A00040A0E0A0A000A0A0A0E0A0]
+.TOP LEFT
+[FF80808080878087]->Pic1
+[FF80808080848487]
+[FF80808080878487]
+[FF80808080988888]
+[FF80808080BE82BE]
+[FF80808080BEA0BE]
+[FF8098888888BE80]
+[FF80BE82BEA0BE80]
+[FF80BEA0BE82BE80]
+[FF8098888888BE80]
+[FF80BE82BEA0BE80]
+.TOP RIGHT
+[FE02020202C242C2]->Pic2
+[FE020202024242C2]
+[FE02020202C242C2]
+[FE02020202FA82FA]
+[FE02020202FA0AFA]
+[FE020202028A8AFA]
+[FE02FA0AFA82FA02]
+[FE02FA82FA0AFA02]
+[FE0262222222FA02]
+[FE02FA8A8A8AFA02]
+[FE02FA8A8A8AFA02]
+.BOTTOM LEFT
+[848780808080FF00]->Pic3
+[808080808080FF00]
+[848780808080FF00]
+[88BE80808080FF00]
+[82BE80808080FF00]
+[A2BE80808080FF00]
+[BEA2BEA2BE80FF00]
+[BEA0BEA2BE80FF00]
+[BE82BEA0BE80FF00]
+[BE82BEA0BE80FF00]
+[A2A2BE828280FF00]
+.BOTTOM RIGHT
+[02C202020202FE00]->Pic4
+[424202020202FE00]
+[42C202020202FE00]
+[8AFA02020202FE00]
+[82FA02020202FE00]
+[0A0A02020202FE00]
+[020202020202FE00]
+[020202020202FE00]
+[020202020202FE00]
+[8A8AFA0A0A02FE00]
+[FA8AFA8AFA02FE00]
+DiagnosticOff
+Fix 5
+Full
+Lbl START
+Fill(L1,20,0)
+RAND()
+RAND()
+While 1
+	DRAW()
+	KEY()
+End
+Lbl DRAW
+ClrDraw
+For([r4],0,3)
+	For([r5],0,3)
+		TILE([r4]*16,[r5]*16,{[r5]*4+[r4]+L1})
+	End
+End
+Bitmap(68,1,GDB1)
+Bitmap(88,4,GDB2)
+RectI(64,0,31,64)
+DispGraph
+Return
+Lbl KEY
+Repeat getKey
+End
+Fill(L2,20,0)
+Fill(L3,20,0)
+Copy(L1,L3,20)
+If getKey(1)
+	For(4)
+		For([r1],0,3)
+			For([r2],0,3)
+				If (4-[r2]*4+(3-[r1])<16)
+					If ({4-[r2]*4+(3-[r1])+L1}=0)
+						{3-[r2]*4+(3-[r1])+L1}->{4-[r2]*4+(3-[r1])+L1}
+						0->{3-[r2]*4+(3-[r1])+L1}
+						Else
+						If ({4-[r2]*4+(3-[r1])+L1})=({3-[r2]*4+(3-[r1])+L1})
+							If ({4-[r2]*4+(3-[r1])+L2}=0) and ({3-[r2]*4+(3-[r1])+L2}=0)
+								{4-[r2]*4+(3-[r1])+L1}++
+								1->{4-[r2]*4+(3-[r1])+L2}
+								0->{3-[r2]*4+(3-[r1])+L1}
+								NEW({4-[r2]*4+(3-[r1])+L1})
+							End
+						End
+					End
+				End
+			End
+		End
+		DRAW()
+	End
+	CHECKRAND()
+End
+If getKey(2)
+	For(4)
+		For([r1],0,3)
+			For([r2],0,3)
+				If ([r2]*4+[r1]-1^4!=3)
+					If ({[r2]*4+[r1]-1+L1}=0)
+						{[r2]*4+[r1]+L1}->{[r2]*4+[r1]-1+L1}
+						0->{[r2]*4+[r1]+L1}
+						Else
+						If ({[r2]*4+[r1]-1+L1})=({[r2]*4+[r1]+L1})
+							If ({[r2]*4+[r1]-1+L2}=0) and ({[r2]*4+[r1]+L2}=0)
+								{[r2]*4+[r1]-1+L1}++
+								1->{[r2]*4+[r1]-1+L2}
+								0->{[r2]*4+[r1]+L1}
+								NEW({[r2]*4+[r1]-1+L1})
+							End
+						End
+					End
+				End
+			End
+		End
+		DRAW()
+	End
+	CHECKRAND()
+End
+If getKey(3)
+	For(4)
+		For([r1],0,3)
+			For([r2],0,3)
+				If (3-[r2]*4+(4-[r1])^4!=0)
+					If ({3-[r2]*4+(4-[r1])+L1}=0)
+						{3-[r2]*4+(3-[r1])+L1}->{3-[r2]*4+(4-[r1])+L1}
+						0->{3-[r2]*4+(3-[r1])+L1}
+						Else
+						If ({3-[r2]*4+(4-[r1])+L1})=({3-[r2]*4+(3-[r1])+L1})
+							If ({3-[r2]*4+(4-[r1])+L2}=0) and ({3-[r2]*4+(3-[r1])+L2}=0)
+								{3-[r2]*4+(4-[r1])+L1}++
+								1->{3-[r2]*4+(4-[r1])+L2}
+								0->{3-[r2]*4+(3-[r1])+L1}
+								NEW({3-[r2]*4+(4-[r1])+L1})
+							End
+						End
+					End
+				End
+			End
+		End
+		DRAW()
+	End
+	CHECKRAND()
+End
+If getKey(4)
+	For(4)
+		For([r1],0,3)
+			For([r2],0,3)
+				If ([r2]-1*4+[r1]<16)
+					If ({[r2]-1*4+[r1]+L1}=0)
+						{[r2]*4+[r1]+L1}->{[r2]-1*4+[r1]+L1}
+						0->{[r2]*4+[r1]+L1}
+						Else
+						If ({[r2]-1*4+[r1]+L1})=({[r2]*4+[r1]+L1})
+							If ({[r2]-1*4+[r1]+L2}=0) and ({[r2]*4+[r1]+L2}=0)
+								{[r2]-1*4+[r1]+L1}++
+								1->{[r2]-1*4+[r1]+L2}
+								0->{[r2]*4+[r1]+L1}
+								NEW({[r2]-1*4+[r1]+L1})
+							End
+						End
+					End
+				End
+			End
+		End
+		DRAW()
+	End
+	CHECKRAND()
+End
+If getKey(15)
+	Goto END
+End
+Return
+Lbl CHECKRAND
+For([r1],0,18)
+	{L1+[r1]}++
+	{L3+[r1]}++
+End
+Equ>String(L1,L3)->[r2]
+For([r1],0,18)
+	{L1+[r1]}--
+	{L3+[r1]}--
+End
+If [r2]
+	RAND()
+End
+Return
+Lbl END
+ClrDraw
+ClrHome
+Return^^r
+Lbl NEW
+If [r1]>10
+	DRAW()
+	Goto WIN
+End
+Return
+Lbl RAND
+0->[r2]
+For([r1],0,15)
+	!If {L1+[r1]}
+		1->[r2]
+	End
+End
+If [r2]
+	rand^16->[r1]
+	Repeat {L1+[r1]}=0
+		rand^16->[r1]
+	End
+	If rand^8
+		1->{L1+[r1]}
+		Else
+		2->{L1+[r1]}
+	End
+End
+Return
+Lbl TILE
+!If [r3]
+	Return
+End
+Pt-On([r1],[r2],Pic1+([r3]-1*8))
+Pt-On([r1]+8,[r2],Pic2+([r3]-1*8))
+Pt-On([r1],[r2]+8,Pic3+([r3]-1*8))
+Pt-On([r1]+8,[r2]+8,Pic4+([r3]-1*8))
+Return
+Lbl WIN
+Rect(20,27,56,10)
+WRect(21,28,54,8)
+Text(36,29,"You Win!")
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto START

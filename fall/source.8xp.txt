@@ -1,0 +1,94 @@
+.FALL
+...
+A ball x
+B ball y
+C wall y
+D wall 1 x
+E wall 2 x
+F wall 3 x
+G wall space
+...
+ClrHome
+DiagnosticOff
+#ExprOn
+Fix 5
+Full
+[387CFEFEFE7C3800]->Pic1
+Data(144,8)->GDB1
+[FFFFFFFFFFFFFFFE00007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE00007FFFFFFFFFFFFFFF]
+Lbl START
+44->A
+15->B
+160->C
+~(rand^4*16)->D
+~(rand^4*16)->E
+~(rand^4*16)->F
+25->G
+While 1
+	SET()
+	DRAW()
+	KEY()
+End
+Lbl SET
+If B<20
+	Pause ((20-B)*5)
+	If B<15
+		Pause ((15-B)*8)
+	End
+End
+B++
+If (pxl-Test(A,B+6) or (pxl-Test(A+7,B+6)
+	B-3->B
+End
+If B>1000
+	Goto DIE
+End
+If B>56
+	56->B
+End
+C--
+If C>1000
+	(C+G+G+G)^(G+G+G)->C
+End
+If C=(3*G-10)
+	~(rand^4*16)->D
+End
+If C=(2*G-10)
+	~(rand^4*16)->E
+End
+If C=(G-10)
+	~(rand^4*16)->F
+End
+Return
+Lbl DRAW
+ClrDraw
+Pt-On(A,B,Pic1)
+Bitmap(D,C,GDB1)
+Bitmap(E,C+G,GDB1)
+Bitmap(F,C+G+G,GDB1)
+Bitmap(D,C-G-G-G,GDB1)
+Bitmap(E,C-G-G,GDB1)
+Bitmap(F,C-G,GDB1)
+DispGraph
+Return
+Lbl KEY
+If (getKey(3)) and (A!=88) and (C<120)
+	A+2->A
+End
+If (getKey(2)) and (A!=0) and (C<120)
+	A-2->A
+End
+If getKey(55)
+	Goto END
+End
+Return
+Lbl DIE
+Goto START
+Lbl END
+0->[r1]
+Repeat (getKey) or ([r1]=2)
+	[r1]++
+End
+ClrDraw
+ClrHome
+Return^^r

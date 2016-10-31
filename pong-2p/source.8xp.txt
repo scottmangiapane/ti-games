@@ -1,0 +1,242 @@
+.PONG2P
+...
+A player 1
+B player 2
+C ball x
+D ball x adjst
+E ball y
+F ball y adjst
+G p1?
+H animation
+...
+.load
+[0030604000000000][003C200000000000][000C060200000000][0000060202020000][0000000002060C00][0000000000043C00][0000000040603000][0000404040600000]->Pic0
+.left paddle
+[0205050505050502]->Pic11
+.right paddle
+[40A0A0A0A0A0A040]->Pic12
+.wall
+[FFAA55FF00000000]->Pic2
+[60B0F06000000000]->Pic3
+.P
+Data(16,16)->GDB1
+[7FFEFFFFFFFFFFFFF00FF00FFFFFFFFFFFFFFFFEF000F000F000F000F0007000]
+.1
+Data(16,16)->GDB2
+[0C001E003E007E007E003E001E001E001E001E001E001E007F80FFC0FFC07F80]
+.2
+Data(16,16)->GDB3
+[7F80FFC0FFC0FFC003C003C07FC0FFC0FFC0FF80F000F000FFC0FFC0FFC07F80]
+ClrHome
+DiagnosticOff
+Fix 5
+...
+Lbl SELECT
+1->G
+Repeat getKey(9)
+	ClrDraw
+	ClrDraw^^r
+	Bitmap(32,10,GDB1)^^r
+	Bitmap(50,10,GDB2)^^r
+	Bitmap(32,36,GDB1)^^r
+	Bitmap(50,36,GDB3)^^r
+	If G
+		Rect(30,8,32,20)
+		WRect(31,9,30,18)
+		Else
+		Rect(30,34,32,20)
+		WRect(31,35,30,18)
+	End
+	DispGraph^^r
+	If getKey(4)
+		1->G
+	End
+	If getKey(1)
+		0->G
+	End
+End
+...
+CONNECT()
+Lbl START
+28->A
+28->B
+40->C
+15->D
+300->E
+0->F
+0->H
+While 1
+	SET()
+	DRAW(1)
+	KEY()
+	LINK()
+End
+Lbl SET
+If C/10<=2
+	If ((E/10+10)>(A+5)) and ((E/10+10)<(A+19))
+		15->D
+		~(2*A+4-(E/5))->F
+		Else
+		DIE(0,0,1)
+		Goto START
+	End
+End
+If C/10>=90
+	If ((E/10+10)>(B+5)) and ((E/10+10)<(B+19))
+		~15->D
+		~(2*B+4-(E/5))->F
+		Else
+		DIE(0,0,0)
+		Goto START
+	End
+End
+If (E<40) or (E>560)
+	~F->F
+End
+If H!=49
+	H++
+End
+Return
+Lbl DRAW
+ClrDraw
+If H!=49
+	ClrDraw^^r
+End
+For([r2],0,12)
+	Pt-On([r2]*8,H-49,Pic2)
+	Pt-On([r2]*8,49-H+60,Pic2)
+End
+Pt-On(C/10,E/10,Pic3)
+Pt-Off(~3,A,Pic11)
+Pt-Off(91,B,Pic12)
+If ([r1]) and (H!=49)
+	If G
+		WRect(96-H,0,48,64)^^r
+		Bitmap(58,H-48+24,GDB1)^^r
+		Bitmap(76,48-H+24,GDB2)^^r
+		RectI(96-H,0,48,64)^^r
+		Else
+		WRect(H-48,0,48,64)^^r
+		Bitmap(10,H-48+24,GDB1)^^r
+		Bitmap(28,48-H+24,GDB3)^^r
+		RectI(H-48,0,48,64)^^r
+	End
+End
+DispGraph^^r
+Return
+Lbl KEY
+If G
+	If (getKey(1)) and (A!=52)
+		A++
+	End
+	If (getKey(4)) and (A!=4)
+		A--
+	End
+	Else
+	If (getKey(1)) and (B!=52)
+		B++
+	End
+	If (getKey(4)) and (B!=4)
+		B--
+	End
+End
+If getKey(55)
+	Goto END
+End
+Return
+Lbl LINK
+C+D->C
+E+F->E
+If G
+	0->[r1]
+	Repeat Send(A,100)
+		CHECK()
+	End
+	0->[r1]
+	Repeat Get->B<100
+		CHECK()
+	End
+	0->[r1]
+	Repeat Send(C/10,100)
+		CHECK()
+	End
+	0->[r1]
+	Repeat Send(E/10,100)
+		CHECK()
+	End
+	Else
+	0->[r1]
+	Repeat Get->A<100
+		CHECK()
+	End
+	0->[r1]
+	Repeat Send(B,100)
+		CHECK()
+	End
+	0->[r1]
+	Repeat Get*10->C<1000
+		CHECK()
+	End
+	0->[r1]
+	Repeat Get*10->E<1000
+		CHECK()
+	End
+End
+Return
+Lbl CHECK
+[r1]++
+If [r1]=300
+	CONNECT()
+End
+Return
+Lbl DIE
+StorePic
+ClrDraw
+Rect(20,20,56,24)
+WRect(21,21,54,22)
+If [r3]!=G
+	Text(33,25,"You won !")
+	Else
+	Text(34,25,"You lost.")
+End
+Text(35,32,"[ENTER]")
+RectI(19,19,58,26)
+Repeat getKey(9)
+	If getKey(55)
+		Goto END
+	End
+	DispGraph^^r
+End
+CONNECT()
+Return
+Lbl END
+ClrDraw
+ClrHome
+0->[r1]
+Repeat (getKey) or ([r1]=2)
+	[r1]++
+End
+Return^^r
+Lbl CONNECT
+While 1
+	For([r1],0,7)
+		ClrDraw
+		Text(27,21,"Connecting...")
+		Text(17,38,"Press [MODE] to quit.")
+		Pt-On(44,29,[r1]*8+Pic0)
+		DispGraph
+		Get
+		If Send(1,10000)
+			For([r2],0,100)
+				If Get->G!=~1
+					Send(0,10000)
+					Goto START
+				End
+			End
+		End
+		If getKey(55)
+			Goto END
+		End
+		Pause rand^80+10
+	End
+End

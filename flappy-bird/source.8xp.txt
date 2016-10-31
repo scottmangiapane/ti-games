@@ -1,0 +1,166 @@
+.FLAPBIRD
+...
+A y value
+B accel
+C counter 1
+D counter 2
+E pipe 1
+F pipe 2
+G score
+...
+DiagnosticOff
+Fix 5
+Full
+.BIRD
+Data(16,16)->GDB1
+[03E00C901108711489148484847E4881317E2082187C07800000000000000000]
+.PIPE
+Data(16,96)->GDB2
+[68166816681668166816681668166816681668166816681668166816681668166816681668166816681668166816681668166006FFFFFFFFE007E007FFFFFFFF00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000FFFFFFFFE007E007FFFFFFFF60066816681668166816681668166816681668166816681668166816681668166816681668166816681668166816681668166816]
+.ENTER
+Data(32,7)->GDB3
+[FFFFFE0088822200BAEEEA008AAA2400BAAAEA008AAA2A00FFBBFE00]
+.FLAPPY BIRD
+Data(48,9)->GDB4
+[FFE000FE0E00893FFE8BEA00BBA22AAE3A008A2AAA8AA200BAAAA2AAEA00AA22228AA200EFEEFAFFBE00002A92000000003B9E000000]
+.SCORE
+[1F11151515111F00]->Pic1
+[0705050505050700]
+[1F111D1117111F00]
+[1F111D111D111F00]
+[1F1515111D050700]
+[1F1117111D111F00]
+[1F11171115111F00]
+[1F111D0505050700]
+[1F11151115111F00]
+[1F1115111D111F00]
+Lbl START
+(26*8)->A
+0->B
+70->C
+130->D
+~(rand^17)-8->E
+~(rand^17)-8->F
+0->G
+DRAW()
+Bitmap(24,29,GDB3)
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+~17->B
+While 1
+	Repeat getKey
+		SET()
+		DRAW()
+		CHECK()
+	End
+	KEY()
+End
+Lbl SET
+A+B->A
+If A>4000
+	0->A
+	0->B
+End
+If A>=(53*8)
+	Goto DIE
+End
+B++
+C--
+If C=~16
+	~(rand^17)-8->E
+	110->C
+End
+D--
+If D=~16
+	~(rand^17)-8->F
+	110->D
+End
+If (C=5) or (D=5)
+	G++
+End
+Return
+Lbl DRAW
+ClrDraw
+Bitmap(5,A/8,GDB1)
+Bitmap(C,E,GDB2)
+Bitmap(D,F,GDB2)
+Rect(0,62,96,2)
+SCORE(69,1,G)
+DispGraph
+Return
+Lbl CHECK
+If (C>65527) or (C<19)
+	If ((A/8)<(E+31)) or ((A/8)>(E+53))
+		Goto DIE
+	End
+End
+If (D>65527) or (D<19)
+	If ((A/8)<(F+31)) or ((A/8)>(F+53))
+		Goto DIE
+	End
+End
+Return
+Lbl KEY
+If getKey(9)
+	If (B>65519) or (B<100)
+		~17->B
+	End
+End
+If getKey(15)
+	Goto END
+End
+Return
+Lbl SCORE
+[r1]+(6*3)->[r1]
+While 1
+	Pt-On([r1],[r2],[r3]^10*8+Pic1)
+	[r1]-6->[r1]
+	[r3]/10->[r3]
+End!If [r3]
+Return
+Lbl DIE
+Pause 1000
+!If GetCalc("appvFlapBird",[Y1])
+	DelVar "appvFlapBird"
+	GetCalc("appvFlapBird",14)->[r1]
+	0->{[r1]}
+	Archive "appvFlapBird"
+	GetCalc("appvFlapBird",[Y1])
+End
+Rect(26,5,45,53)
+RectI(27,6,43,51)
+Bitmap(29,7,GDB4)
+Text(29,16,"by ClrDraw")
+RectI(28,23,41,1)
+Text(29,26,"score")
+SCORE(42,25,G)
+Bitmap(40,35,GDB1)
+Text(29,50,"high")
+If G>({[Y1]})
+	SCORE(42,49,G)
+	Else
+	SCORE(42,49,{[Y1]})
+End
+DispGraph
+If G>({[Y1]})
+	DelVar "appvFlapBird"
+	GetCalc("appvFlapBird",14)->[r1]
+	G->{[r1]}
+	Archive "appvFlapBird"
+	GetCalc("appvFlapBird",[Y1])
+End
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto START
+Lbl END
+ClrDraw
+ClrHome
+Return^^r

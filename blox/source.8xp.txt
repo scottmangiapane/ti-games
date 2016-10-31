@@ -1,0 +1,178 @@
+.BLOX
+...
+A score
+L1 vars
+0-3 enemy x
+4-7 enemy y
+8-11 en x acl
+12-15 en y acl
+16 x
+17 y
+18  switch acl
+...
+[FF818181818181FF]->Pic1
+Data(16,16)->GDB1
+[FFFFFFFFC003C003C003C003C003C003C003C003C003C003C003C003FFFFFFFF]
+ClrHome
+DiagnosticOff
+Fix 5
+Normal
+Lbl START
+0->A
+Fill(L1,40,0)
+0->{L1+0}
+80->{L1+1}
+0->{L1+2}
+80->{L1+3}
+0->{L1+4}
+0->{L1+5}
+48->{L1+6}
+48->{L1+7}
+44->{L1+16}
+28->{L1+17}
+Repeat getKey(55)
+	Pause 20
+	SET()
+	BOUNDS()
+	DRAW()
+	KEYS()
+End
+Goto END
+Lbl SET
+For([r1],0,7)
+	{L1+[r1]}+{L1+[r1]+8}->{L1+[r1]}
+End
+If {L1+18}=0
+	60->{L1+18}
+	For([r1],0,3)
+		If rand^2
+			If {L1+[r1]+8}!=2
+				{L1+[r1]+8}++
+			End
+			Else
+			If {L1+[r1]+8}!=254
+				{L1+[r1]+8}--
+			End
+		End
+		If rand^2
+			If {L1+[r1]+12}!=2
+				{L1+[r1]+12}++
+			End
+			Else
+			If {L1+[r1]+12}!=254
+				{L1+[r1]+12}--
+			End
+		End
+	End
+End
+{L1+18}--
+Return
+Lbl BOUNDS
+If {L1+16}>96
+	If {L1+16}<150
+		0->{L1+16}
+		Else
+		96->{L1+16}
+	End
+End
+If {L1+17}>64
+	If {L1+17}<150
+		0->{L1+17}
+		Else
+		64->{L1+17}
+	End
+End
+For([r1],0,3)
+	If {L1+[r1]}>96
+		If {L1+[r1]}<150
+			0->{L1+[r1]}
+			Else
+			96->{L1+[r1]}
+		End
+	End
+	If {L1+[r1]+4}>64
+		If {L1+[r1]+4}<150
+			0->{L1+[r1]+4}
+			Else
+			64->{L1+[r1]+4}
+		End
+	End
+End
+Return
+Lbl DRAW
+ClrDraw
+For([r1],0,3)
+	Bitmap({L1+[r1]},{L1+[r1]+4},GDB1)
+	Bitmap({L1+[r1]}-96,{L1+[r1]+4},GDB1)
+	Bitmap({L1+[r1]},{L1+[r1]+4}-64,GDB1)
+	Bitmap({L1+[r1]}-96,{L1+[r1]+4}-64,GDB1)
+End
+If CHECK()
+	Pt-On({L1+16},{L1+17},Pic1)
+	Pt-On({L1+16}-96,{L1+17},Pic1)
+	Pt-On({L1+16},{L1+17}-64,Pic1)
+	Pt-On({L1+16}-96,{L1+17}-64,Pic1)
+	Rect(0,50,96,14)
+	RectI(0,51,96,13)
+	Text(1,51,"Blox - by ClrDraw")
+	Text(1,57,"score: ",A>Dec)
+	Lbl 1
+	DrawInv
+	DispGraph
+	Repeat (getKey(9)) or (getKey(54))
+		If getKey(55)
+			Goto END
+		End
+	End
+	Goto START
+End
+Text(1,57,A>Dec)
+A++
+Pt-On({L1+16},{L1+17},Pic1)
+Pt-On({L1+16}-96,{L1+17},Pic1)
+Pt-On({L1+16},{L1+17}-64,Pic1)
+Pt-On({L1+16}-96,{L1+17}-64,Pic1)
+DrawInv
+DispGraph
+Return
+Lbl KEYS
+If getKey(4)
+	{L1+17}-3->{L1+17}
+End
+If getKey(1)
+	{L1+17}+3->{L1+17}
+End
+If getKey(3)
+	{L1+16}+3->{L1+16}
+End
+If getKey(2)
+	{L1+16}-3->{L1+16}
+End
+Return
+Lbl CHECK
+0->[r1]
+For([r2],0,7)
+	For([r3],0,7)
+		If pxl-Test(({L1+16}+[r2]),({L1+17}+[r3]))
+			1->[r1]
+		End
+		If pxl-Test(({L1+16}+[r2])-96,({L1+17}+[r3]))
+			1->[r1]
+		End
+		If pxl-Test(({L1+16}+[r2]),({L1+17}+[r3])-64)
+			1->[r1]
+		End
+		If pxl-Test(({L1+16}+[r2])-96,({L1+17}+[r3])-64)
+			1->[r1]
+		End
+	End
+End
+Return[r1]
+Lbl END
+ClrDraw
+ClrHome
+0->A
+Repeat (getKey) or (A=3)
+	A++
+End
+Return^^r

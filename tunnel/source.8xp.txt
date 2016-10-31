@@ -1,0 +1,124 @@
+.TUNNEL
+#Icon(F1FFF8FFDC7FCE3FC71FC38FC1C7C0C7C0C7C1C7C38FC71FCE3FDC7FF8FFF1FF)
+...
+A triangle y
+B count
+C tun y
+D tun height
+...
+Lbl S1
+[C0A090888890A0C0]->Pic1
+26->A
+200->B
+17->C
+30->D
+0->E
+ClrDraw
+ClrDraw^^r
+ClrHome
+DiagnosticOff
+Fix 5
+Full
+Repeat 0
+	sub(D1)
+	sub(K1)
+	sub(C1)
+End
+Lbl D1
+Horizontal-
+If D!=18
+	B--
+End
+If (B=0) or (B=100) or (B=200)
+	E++
+End
+If B=0
+	300->B
+	D--
+End
+If (rand^2)
+	If C!=0
+		C--
+	End
+	Else
+	If C!=(64-D)
+		C++
+	End
+End
+Rect(95,0,95,64)
+RectI(95,C,95,D)
+Pt-Change(5,A,Pic1)
+DispGraph
+Pt-Change(5,A,Pic1)
+Return
+Lbl K1
+If getKey(41)
+	sub(P1)
+	Pause 200
+End
+If (getKey(4)) and (A!=0)
+	A--
+End
+If (getKey(1)) and (A!=56)
+	A++
+End
+If getKey(15)
+	ClrDraw
+	ClrHome
+	Return^^r
+End
+Return
+Lbl P1
+StorePic
+ClrDraw
+Text(35,28,"paused")
+Pt-Change(5,A,Pic1)^^r
+Repeat getKey
+	DispGraph^^r
+End
+Pt-Change(5,A,Pic1)^^r
+RecallPic
+ClrDraw^^r
+If getKey(15)
+	ClrDraw
+	ClrHome
+	Return^^r
+End
+Return
+Lbl C1
+If (pxl-Test(5,A+2)) or (pxl-Test(5,A+5)) or (pxl-Test(8,A+3))
+	Goto C2
+End
+Return
+Lbl C2
+Pt-On(5,A,Pic1)
+DispGraph
+ClrDraw^^r
+StorePic
+Rect(10,15,76,34)
+RectI(11,16,74,32)
+Text(12,16,"Tunnel
+RectI(11,16,74,8
+Text(12,24,"(c) ClrDraw")
+RectI(11,31,74,1)
+Text(12,33,"score: ",E>Dec)
+If (GetCalc("appvTunnel",[Y1])) and (({[Y1]})>E)
+	Text(12,39,"high: ",{[Y1]}>Dec)
+	Else
+	Text(12,39,"high: ",E>Dec)
+	!If GetCalc("appvTunnel")->[r1]
+		GetCalc("appvTunnel",5)->[r1]
+	End
+	E->{[r1]}
+End
+Archive "appvTunnel"
+Repeat (getKey(54)) or (getKey(9)) or (getKey(15))
+	DispGraph^^r
+End
+ClrDraw^^r
+If getKey(15)
+	ClrDraw
+	ClrHome
+	Return^^r
+End
+Goto S1

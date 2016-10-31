@@ -1,0 +1,206 @@
+.SNAKE
+...
+A direction
+B length
+C point X
+D point Y
+E pause count
+F score
+L1 snake X
+L2 snake Y
+...
+.SCORE
+[1F11151515111F00]->Pic1
+[0705050505050700]
+[1F111D1117111F00]
+[1F111D111D111F00]
+[1F1515111D050700]
+[1F1117111D111F00]
+[1F11171115111F00]
+[1F111D0505050700]
+[1F11151115111F00]
+[1F1115111D111F00]
+ClrHome
+DiagnosticOff
+Fix 5
+Full
+Lbl START
+3->A
+1->B
+rand^30+1->C
+rand^19+1->D
+0->F
+Fill(L1,300,0)
+15->{L1}
+14->{L1+1}
+13->{L1+2}
+Fill(L2,300,0)
+10->{L2}
+10->{L2+1}
+10->{L2+2}
+While 1
+	SET()
+	DRAW()
+	KEY()
+	E++
+	If B<4
+		DRAW()
+	End
+	If B<8
+		DRAW()
+	End
+	If B<12
+		DRAW()
+	End
+	If B<16
+		DRAW()
+	End
+	If B<20
+		DRAW()
+	End
+	If ((B^8=0) or (B^8=5)) and (E<10)
+		For(4)
+			DRAW()
+		End
+	End
+End
+Lbl SET
+For([r1],1,B*2)
+	If ({L1}={L1+[r1]}) and ({L2}={L2+[r1]})
+		For(6)
+			DrawInv
+			DispGraph
+			Pause 600
+		End
+		0->[r1]
+		Repeat (getKey) or ([r1]=2)
+			[r1]++
+		End
+		Repeat getKey
+			DispGraph^^r
+		End
+		Goto START
+	End
+End
+If ({L1}=C) and ({L2}=D)
+	If B!=50
+		B++
+	End
+	F++
+	0->E
+	rand^30+1->C
+	rand^19+1->D
+End
+For([r1],0,102)
+	{L1+102-[r1]}->{L1+102-[r1]+1}
+	{L2+102-[r1]}->{L2+102-[r1]+1}
+End
+If A=1
+	{L2}++
+End
+If A=2
+	{L1}--
+End
+If A=3
+	{L1}++
+End
+If A=4
+	{L2}--
+End
+If {L1}>32
+	31->{L1}
+	Else
+	{L1}^32->{L1}
+End
+If {L2}>21
+	20->{L2}
+	Else
+	{L2}^21->{L2}
+End
+Return
+Lbl DRAW
+ClrDraw
+ClrDraw^^r
+For([r1],0,B*2)
+	Rect({L1+[r1]}*3,{L2+[r1]}*3,3,3)
+	RectI({L1+[r1]}*3+1,{L2+[r1]}*3+1,1,1)
+End
+RectI({L1}*3-1,{L2}*3-1,5,5)
+Rect(C*3,D*3,3,3)
+If B^8>4
+	RectI(0,0,96,63)
+End
+If F<10
+	SCORE(25,28,F)
+	Else
+	If F<100
+		SCORE(28,28,F)
+		Else
+		If F<1000
+			SCORE(31,28,F)
+			Else
+			SCORE(34,28,F)
+		End
+	End
+End
+DispGraph^^r
+Return
+Lbl KEY
+ReturnIf ((getKey(4)) and (getKey(3))) or ((getKey(3)) and (getKey(1))) or ((getKey(1)) and (getKey(2))) or ((getKey(2)) and (getKey(4)))
+If B^8>4
+	If (getKey(1)) and (A!=1)
+		4->A
+		Return
+	End
+	If (getKey(2)) and (A!=2)
+		3->A
+		Return
+	End
+	If (getKey(3)) and (A!=3)
+		2->A
+		Return
+	End
+	If (getKey(4)) and (A!=4)
+		1->A
+		Return
+	End
+	Else
+	If (getKey(1)) and (A!=4)
+		1->A
+		Return
+	End
+	If (getKey(2)) and (A!=3)
+		2->A
+		Return
+	End
+	If (getKey(3)) and (A!=2)
+		3->A
+		Return
+	End
+	If (getKey(4)) and (A!=1)
+		4->A
+		Return
+	End
+End
+If getKey(55)
+	Goto END
+End
+Return
+Lbl END
+0->[r1]
+Repeat (getKey) or ([r1]=2)
+	[r1]++
+End
+ClrDraw
+ClrHome
+Return^^r
+Lbl SCORE
+[r1]+(6*3)->[r1]
+While 1
+	Pt-On([r1],[r2],[r3]^10*8+Pic1)
+	Pt-Change([r1],[r2],[r3]^10*8+Pic1)
+	Pt-On([r1],[r2],[r3]^10*8+Pic1)^^r
+	[r1]-6->[r1]
+	[r3]/10->[r3]
+End!If [r3]
+Return
