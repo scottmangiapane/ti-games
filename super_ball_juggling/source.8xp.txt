@@ -1,0 +1,156 @@
+.JUGGLING
+...
+A ball 1
+B accel
+C ball 2
+D accel
+E ball 2?
+F score
+...
+!If GetCalc("appvJUGGLING",[Y1])
+	GetCalc("appvJUGGLING",10)->[r1]
+	0->{[r1]}
+	Archive "appvJUGGLING"
+	GetCalc("appvJUGGLING",[Y1])
+End
+ClrHome
+DiagnosticOff
+Fix 5
+Full
+.ball
+[3844828282443800]->Pic1
+.[7088888870000000]->Pic1
+.player 1
+Data(16,16)->GDB11
+[01FC0202024A0202023A020201FC020204010505050503FE0124012403DE07DF]
+.player 2
+Data(16,16)->GDB12
+[3F804040524040405C4040403F8040408020A0A0A0A07FC0248024807BC0FBE0]
+.player 1 kick
+Data(16,16)->GDB21
+[01FC02020202024A0202023A01FC020204010505050503FE0124012703DF07CC]
+.player 2 kick
+Data(16,16)->GDB22
+[3F8040404040524040405C403F8040408020A0A0A0A07FC02480E480FBC033E0]
+.player 1 dead
+Data(16,16)->GDB31
+[0000000000000000000000E67D17827FAA138A128A1CAA138213827F7D1300E1]
+.player 1 dead
+Data(16,16)->GDB32
+[000000000000000000006700E8BEFE41C85548513851C855C841FE41C8BE8700]
+Data(40,7)->GDB41
+[FFFFFBDFB88A888A22A8BAABAAAAA88A889222A8EABBAAAAEE88A8AA2A22FFEFFBFFFE]
+Data(32,7)->GDB42
+[FFFFEFFE8A88AA22DABBAAAE5AAAAAAADAAABAAA98888AA2FFFFFFFE]
+Lbl START
+6400->A
+~80->B
+~500->C
+~0->D
+0->E
+0->F
+While 1
+	Repeat getKey
+		SET()
+		DRAW()
+	End
+	KEY()
+End
+Lbl SET
+A+B->A
+B++
+If E
+	C+D->C
+	D++
+End
+If (A>9000) or ((C>9000) and (E))
+	Goto DEAD
+End
+Return
+Lbl DRAW
+ClrDraw
+SCORE(69,1,F)
+RectI(0,56,96,1)
+If getKey(53)
+	Bitmap(10,40,GDB21)
+	Else
+	Bitmap(10,40,GDB11)
+End
+Pt-On(26,A/100,Pic1)
+If getKey(49)
+	Bitmap(69,40,GDB22)
+	Else
+	Bitmap(69,40,GDB12)
+End
+Pt-On(63,C/100,Pic1)
+DispGraph
+Return
+Lbl KEY
+If (getKey(53)) and ((A>4400) and (A<5100))
+	~(A/100-42*12)->B
+	F++
+End
+If ((getKey(49)) and (E)) and ((C>4400) and (C<5100))
+	~(C/100-42*12)->D
+	F++
+End
+If (F=4) and (E=0)
+	1->E
+	6400->C
+	~80->D
+End
+If getKey(15)
+	Goto END
+End
+Return
+Lbl DEAD
+ClrDraw
+RectI(0,56,96,1)
+Bitmap(10,40,GDB31)
+Bitmap(69,40,GDB32)
+Bitmap(12,2,GDB41)
+Bitmap(52,2,GDB42)
+Text(29,9,"by ClrDraw")
+Text(24,20,"score")
+SCORE(46,20,F)
+Text(24,30,"high")
+If F>({[Y1]})
+	SCORE(46,30,F)
+	Else
+	SCORE(46,30,{[Y1]})
+End
+DispGraph
+If F>({[Y1]})
+	UnArchive "appvJUGGLING"
+	GetCalc("appvJUGGLING")->[r1]
+	F->{[r1]}
+	Archive "appvJUGGLING"
+	GetCalc("appvJUGGLING",[Y1])
+End
+Repeat getKey(9)
+	If getKey(15)
+		Goto END
+	End
+End
+Goto START
+Lbl END
+ClrDraw
+ClrHome
+Return^^r
+Lbl SCORE
+[1F11151515111F00]->Pic1FONT
+[0705050505050700]
+[1F111D1117111F00]
+[1F111D111D111F00]
+[1F1515111D050700]
+[1F1117111D111F00]
+[1F11171115111F00]
+[1F111D0505050700]
+[1F11151115111F00]
+[1F1115111D111F00]
+[r1]+(6*3)->[r1]
+While 1
+	Pt-On([r1],[r2],[r3]^10*8+Pic1FONT)
+	[r1]-6->[r1]:[r3]/10->[r3]
+End!If [r3]
+:Return

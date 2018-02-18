@@ -1,0 +1,187 @@
+.DONTSTEP
+...
+A tile y
+B player x
+C count
+D score
+E count
+L1 black tiles
+...
+.SHOE
+[387CFEFEFE7C3800]->Pic1
+.FINISH LINE
+Data(16,16)->GDB1
+[FFFF00000000318C4A524A52318C00000000318C4A524A52318C00000000FFFF]
+DiagnosticOff
+Fix 5
+#ExprOn
+Full
+!If GetCalc("appvStep",[Y1])
+	GetCalc("appvStep",20)->[r1]
+	For([r2],0,16)
+		If [r2]^2
+			0->{[r1]+[r2]}
+			Else
+			100->{[r1]+[r2]}
+		End
+	End
+	Archive "appvStep"
+	GetCalc("appvStep",[Y1])
+End
+0->D
+Goto SCORE
+Lbl START
+rand^5->{L1+0}
+rand^5->{L1+1}
+rand^5->{L1+2}
+rand^5->{L1+3}
+rand^5->{L1+4}->{L1+5}
+1->A
+5->B
+0->C
+0->D
+0->E
+While 1
+	SET()
+	DRAW()
+	Repeat (A^15)=3
+		SET()
+		DRAW()
+	End
+	4->[r1]
+	Repeat [r1]=~1
+		{L1+[r1]}->{L1+[r1]+1}
+		[r1]--
+	End
+	rand^5->{L1+0}
+	If C=49
+		Goto SAFE
+	End
+	KEY()
+	D+14->D
+End
+Lbl SET
+A+2->A
+A^14->A
+Return
+Lbl DRAW
+ClrDraw
+For([r1],0,4)
+	If ((A^15)>3) and ((A^15)<16)
+		Rect({L1+[r1]}*19,A^15+([r1]*15)-30,19,15)
+		Else
+		Rect({L1+[r1]}*19,A^15+([r1]*15)-15,19,15)
+	End
+End
+If (A^15+50)>53
+	Pt-On(B*19+6,A^15+48,Pic1)
+End
+If C>=46
+	For([r1],0,5)
+		If ((A^15)>3) and ((A^15)<16)
+			WRect([r1]*16,A^15+(C-46*15)-15,20,16)
+			Bitmap([r1]*16,A^15+(C-46*15)-15,GDB1)
+			Else
+			WRect([r1]*16,A^15+(C-46*15),20,16)
+			Bitmap([r1]*16,A^15+(C-46*15),GDB1)
+		End
+	End
+End
+DispGraph
+Return
+Lbl KEY
+Repeat getKey->[r1]
+	If E=115
+		D++
+		0->E
+	End
+	E++
+End
+If [r1]=15
+	Goto END
+	Else
+	4-([r1]-49)->[r1]
+	If [r1]>4
+		Goto KEY
+	End
+End
+If [r1]!=({L1+5})
+	Goto OUT
+End
+[r1]->B
+C++
+Return
+Lbl OUT
+0->D
+ClrDraw
+DispGraph([Pic2])
+Pause 1000
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto SCORE
+Lbl SAFE
+ClrDraw
+DispGraph([Pic1])
+StoreGDB 
+DrawInv
+Text(65,30,D/100>Dec,":  ",D^100>Dec)
+DrawInv
+DispGraph
+If (D)<(({7*2+[Y1]})*100+({7*2+1+[Y1]}))
+	WRect(0,57,68,7)
+	Text(1,57,"Saving...
+	RectI(0,57,68,7)
+	DispGraph
+	UnArchive "appvStep"
+	GetCalc("appvStep")->[r1]
+	7->[r2]
+	Repeat ([r2]=0) or ((D)>=(({[r2]*2-2+[r1]})*100+({[r2]*2-1+[r1]})))
+		[r2]--
+		{[r2]*2+[r1]}->{[r2]*2+2+[r1]}
+		{[r2]*2+1+[r1]}->{[r2]*2+2+1+[r1]}
+	End
+	D/100->{[r2]*2+[r1]}
+	D^100->{[r2]*2+1+[r1]}
+	Archive "appvStep"
+	GetCalc("appvStep",[Y1])
+	WRect(0,57,68,7)
+	Text(1,57,"Complete.")
+	RectI(0,57,68,7)
+	DispGraph
+End
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto SCORE
+Lbl SCORE
+ClrDraw
+DispGraph([Pic0])
+StoreGDB 
+DrawInv
+For([r1],0,7)
+	If {[r1]*2+[Y1]}=100
+		Text(4,[r1]*6+13,"--  :  --")
+		Else
+		Text(4,[r1]*6+13,{[r1]*2+[Y1]}>Dec,":  ",{[r1]*2+1+[Y1]}>Dec)
+		If D=(({[r1]*2+[Y1]})*100+({[r1]*2+1+[Y1]}))
+			RectI(1,[r1]*6+14,1,5)
+		End
+	End
+End
+DrawInv
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto START
+Lbl END
+ClrDraw
+ClrHome
+Return^^r

@@ -1,0 +1,180 @@
+.THELINE
+...
+A ball
+B line start
+C line motion
+D counter 1
+E counter 2
+F line end
+H move var
+I score (100)
+J score
+K store contrl
+...
+Data(32,5)->GDB1
+[E80880004EE83B804AA8AA804AC8AB007BEFEF80]
+ClrHome
+DiagnosticOff
+Fix 5
+Lbl START
+Normal
+45->A
+6->B
+0->C
+0->D
+0->E
+6->F
+0->G
+0->H
+0->I
+1->J
+0->K
+ClrDraw
+While 1
+	SET()
+	DRAW()
+	TEST()
+	KEY()
+End
+Lbl SET
+If A>1000
+	0->A
+End
+If A>89
+	89->A
+End
+If A-3^7!=0
+	If (getKey(2)=0) and (getKey(3)=0) and (getKey(53)=0) and (getKey(49)=0)
+		A+H->A
+	End
+	Else
+	0->H
+End
+E++
+If I>2
+	Full
+End
+Return
+Lbl DRAW
+!If E^3->E
+	D++
+	K++
+	If K^2->K
+		J++
+		!If J^100->J
+			I++
+		End
+	End
+	Vertical+
+	!If D^7
+		If G
+			G--
+			!If G
+				F->B
+			End
+			Rect(0,0,96,7)
+			If B>F
+				WRect(F*7+3,0,B-F+1*7,7)
+				Else
+				WRect(B*7+3,0,F-B+1*7,7)
+			End
+			Else
+			Rect(0,0,96,7)
+			WRect(B*7+3,0,7,7)
+			!If D^21->D
+				If ((rand^2) and (B!=12)) or (B=0)
+					B+(rand^6)+1->F
+					If F>12
+						12->F
+					End
+					If F-B*2/5+1->G=1
+						G++
+					End
+					For([r1],B,F)
+						WRect([r1]*7+3,0,7,7)
+					End
+					Else
+					B-(rand^6)-1->F
+					If F>100
+						0->F
+					End
+					If B-F*2/5+1->G=1
+						G++
+					End
+					For([r1],F,B)
+						WRect([r1]*7+3,0,7,7)
+					End
+				End
+			End
+		End
+	End
+End
+Pt-Change(A,56,[3844828282443800])
+WRect(0,0,96,7)
+Bitmap(36,1,GDB1)
+RectI(0,0,96,7)
+DispGraph
+Rect(0,0,96,7)
+If B>F
+	RectI(F*7+3,0,B-F+1*7,7)
+	Else
+	RectI(B*7+3,0,F-B+1*7,7)
+End
+Pt-Change(A,56,[3844828282443800])
+Return
+Lbl TEST
+If (pxl-Test(A+3,57)) or (pxl-Test(A+3,61)) or (pxl-Test(A+1,59)) or (pxl-Test(A+5,59))
+	StoreGDB 
+	For(6)
+		DrawInv
+		DispGraph
+		Pause 200
+	End
+	!If GetCalc("appvTheLine",[Y1])
+		GetCalc("appvTheLine",10)->[r1]
+		Fill([r1],10,0)
+		I->{[r1]}
+		J->{[r1]+1}
+		Archive "appvTheLine"
+	End
+	GetCalc("appvTheLine",[Y1])
+	If ((I=({[Y1]})) and (J>({[Y1]+1}))) or (I>({[Y1]}))
+		UnArchive "appvTheLine"
+		GetCalc("appvTheLine")->[r1]
+		I->{[r1]}
+		J->{[r1]+1}
+		Archive "appvTheLine"
+		GetCalc("appvTheLine",[Y1])
+	End
+	For([r1],0,6)
+		Vertical-
+		WRect(0,64-[r1],96,6)
+		Text(0,64-[r1],"Score: ",(I*100+J)>Dec,"   High: ",(({[Y1]})*100+({[Y1]+1}))>Dec)
+		DispGraph
+	End
+	Repeat getKey(9)
+		If getKey(15)
+			Goto END
+		End
+	End
+	Goto START
+End
+Return
+Lbl KEY
+If (getKey(2)) or (getKey(53))
+	A-1->A
+	~1->H
+End
+If (getKey(3)) or (getKey(49))
+	A+1->A
+	1->H
+End
+If getKey(15)
+	Goto END
+End
+Return
+Lbl END
+ClrDraw
+ClrHome
+Fix 4
+Return^^r

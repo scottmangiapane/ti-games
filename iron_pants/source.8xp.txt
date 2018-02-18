@@ -1,0 +1,172 @@
+.IRONPANT
+...
+A y value
+B accel
+C counter 1
+D counter 2
+E pipe 1
+F pipe 2
+G score
+...
+DiagnosticOff
+Fix 5
+Full
+.AVATAR
+Data(16,16)->GDB1
+[04000A3E7141A0C57841BE477FC10BFE07C00000000000000000000000000000]
+.BOXES
+Data(16,88)->GDB2
+[FFFF8001BFFDA815B42DAA55A5A5A245A245A5A5AA55B42DA815BFFD8001FFFFFFFF8001BFFDA815B42DAA55A5A5A245A245A5A5AA55B42DA815BFFD8001FFFF000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000FFFF8001BFFDA815B42DAA55A5A5A245A245A5A5AA55B42DA815BFFD8001FFFFFFFF8001BFFDA815B42DAA55A5A5A245A245A5A5AA55B42DA815BFFD8001FFFF]
+.ENTER
+Data(32,7)->GDB3
+[FFFFFE0088822200BAEEEA008AAA2400BAAAEA008AAA2A00FFBBFE00]
+.IRON PANTS
+Data(48,7)->GDB4
+[FFFFBFFFFF808888A2220880DAAAAAABBB8059AAA22AA880DAAAAEAAAE808A8AAAAAA880FFFFBBFEEF80]
+.BASE
+Data(26,7)->GDB5
+[1FFFFE00210021004CC0CC80923F12408C000C4080000040FFFFFFC0]
+.SCORE
+[1F11151515111F00]->Pic1
+[0705050505050700]
+[1F111D1117111F00]
+[1F111D111D111F00]
+[1F1515111D050700]
+[1F1117111D111F00]
+[1F11171115111F00]
+[1F111D0505050700]
+[1F11151115111F00]
+[1F1115111D111F00]
+Lbl START
+(26*5)->A
+0->B
+70->C
+132->D
+~(rand^28)->E
+~(rand^28)->F
+0->G
+DRAW()
+Bitmap(24,27,GDB3)
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+While 1
+	SET()
+	DRAW()
+	CHECK()
+	KEY()
+End
+Lbl SET
+A+B->A
+If A>4000
+	0->A
+	0->B
+End
+If A>=(57*5)
+	Goto DIE
+End
+If getKey(9)
+	B--
+	Else
+	B++
+End
+C-2->C
+If C=~16
+	~(rand^28)->E
+	114->C
+End
+D-2->D
+If D=~16
+	~(rand^28)->F
+	114->D
+End
+If (C=4) or (D=4)
+	G++
+End
+Return
+Lbl DRAW
+ClrDraw
+Bitmap(5,A/5,GDB1)
+Bitmap(C,E,GDB2)
+WRect(C,57,16,7)
+Bitmap(C-5,57,GDB5)
+Bitmap(D,F,GDB2)
+WRect(D,57,16,7)
+Bitmap(D-5,57,GDB5)
+Rect(0,62,96,2)
+SCORE(69,1,G)
+DispGraph
+Return
+Lbl CHECK
+If (C>65527) or (C<19)
+	If ((A/5)<(E+31)) or ((A/5)>(E+48))
+		Goto DIE
+	End
+End
+If (D>65527) or (D<19)
+	If ((A/5)<(F+31)) or ((A/5)>(F+48))
+		Goto DIE
+	End
+End
+Return
+Lbl KEY
+If getKey(15)
+	Goto END
+End
+Return
+Lbl SCORE
+[r1]+(6*3)->[r1]
+While 1
+	Pt-On([r1],[r2],[r3]^10*8+Pic1)
+	[r1]-6->[r1]
+	[r3]/10->[r3]
+End!If [r3]
+Return
+Return
+Lbl DIE
+Pause 1000
+!If GetCalc("appvIrnPants",[Y1])
+	DelVar "appvIrnPants"
+	GetCalc("appvIrnPants",14)->[r1]
+	0->{[r1]}
+	Archive "appvIrnPants"
+	GetCalc("appvIrnPants",[Y1])
+End
+Rect(25,5,45,53)
+RectI(26,6,43,51)
+Bitmap(27,8,GDB4)
+Text(28,16,"by ClrDraw")
+RectI(27,23,41,1)
+Text(28,26,"score")
+SCORE(41,25,G)
+Bitmap(39,35,GDB1)
+Text(28,50,"high")
+If G>({[Y1]})
+	SCORE(41,49,G)
+	Else
+	SCORE(41,49,{[Y1]})
+End
+DispGraph
+If G>({[Y1]})
+	DelVar "appvIrnPants"
+	GetCalc("appvIrnPants",14)->[r1]
+	G->{[r1]}
+	Archive "appvIrnPants"
+	GetCalc("appvIrnPants",[Y1])
+	Else
+	Pause 1000
+End
+DispGraph
+Repeat (getKey) and (getKey(9))
+	If getKey(15)
+		Goto END
+	End
+End
+Goto START
+Lbl END
+ClrDraw
+ClrHome
+Return^^r
