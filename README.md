@@ -17,3 +17,7 @@ These programs are built for the Texas Instruments 83+/84 graphing calculator (b
 * Connect the TI-83+ or TI-84 to the computer  
 * Transfer the '.8xp' files to the device using TI Connect  
 * Run the program from the [PRGM] menu with the asm() command  
+
+## Special Thanks
+
+Special thanks to [Brian Coventry](https://github.com/bcov77) for his work on [zStart](https://www.omnimaga.org/ti-z80-calculator-projects/zstart-an-app-that-runs-on-ram-clears/msg361451/#msg361451), without which this wouldn't be possible.
