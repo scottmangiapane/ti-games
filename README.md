@@ -4,7 +4,7 @@
 
 ## Platform
 
-These programs are built for the Texas Instruments 83+/84 graphing calculator (black and white edition).
+These programs are built for the Texas Instruments 83+/84 graphing calculator (black and white edition). They were made with [Axe Parser](https://www.ticalc.org/archives/files/fileinfo/456/45659.html), a low-level language syntactically similar to TI-BASIC but compiled into much faster binaries with graphics, grayscale support, multiplayer functionality, and more.
 
 ## Download
 
@@ -20,4 +20,4 @@ These programs are built for the Texas Instruments 83+/84 graphing calculator (b
 
 ## Special Thanks
 
-Special thanks to [Brian Coventry](https://github.com/bcov77) for his work on [zStart](https://www.omnimaga.org/ti-z80-calculator-projects/zstart-an-app-that-runs-on-ram-clears/msg361451/#msg361451), without which this wouldn't be possible.
+Special thanks to [Kevin Horowitz](https://www.ticalc.org/archives/files/authors/103/10304.html) for his work on [Axe Parser](https://www.ticalc.org/archives/files/fileinfo/456/45659.html) and [Brian Coventry](https://github.com/bcov77) for his work on [zStart](https://www.omnimaga.org/ti-z80-calculator-projects/zstart-an-app-that-runs-on-ram-clears/msg361451/#msg361451), without which this wouldn't be possible.
