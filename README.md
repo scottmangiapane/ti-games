@@ -1,10 +1,10 @@
-## TI Games
+# TI Games
 
 ![2048](2048/screenshot.gif) ![Blox](blox/screenshot.gif) ![Don't Step](dont_step/screenshot.gif) ![Fall](fall/screenshot.gif) ![Flappy Bird](flappy-bird/screenshot.gif) ![Iron Pants](iron_pants/screenshot.gif) ![Pong2P](pong-2p/screenshot_p1.gif) ![Pong2P](pong-2p/screenshot_p2.gif) ![Snake](snake/screenshot.gif) ![Super Ball Juggling](super_ball_juggling/screenshot.gif) ![The Line](the_line/screenshot.gif) ![Tunnel](tunnel/screenshot.gif)
 
 ## Platform
 
-These programs are built for the Texas Instruments 83+/84 graphing calculator (black and white edition). They were made with [Axe Parser](https://www.ticalc.org/archives/files/fileinfo/456/45659.html), a low-level language syntactically similar to TI-BASIC but compiled into much faster binaries with graphics, grayscale support, multiplayer functionality, and more.
+These programs were built for the Texas Instruments 83+/84 graphing calculator (black and white edition). They were made with [Axe Parser](https://www.ticalc.org/archives/files/fileinfo/456/45659.html), a low-level language syntactically similar to TI-BASIC but compiled into much faster binaries with graphics, grayscale support, multiplayer functionality, and more.
 
 ## Download
 
@@ -13,10 +13,11 @@ These programs are built for the Texas Instruments 83+/84 graphing calculator (b
 
 ## How to Install
 
-* Download TI Connect<br>https://education.ti.com/en/us/software/search/ti-83-plus-family  
-* Connect the TI-83+ or TI-84 to the computer  
-* Transfer the '.8xp' files to the device using TI Connect  
-* Run the program from the [PRGM] menu with the asm() command  
+* Download TI Connect  
+https://education.ti.com/en/us/software/search/ti-83-plus-family
+* Connect your TI-83+ or TI-84 to the computer
+* Transfer the '.8xp' files to the device using TI Connect
+* Run the program from the [PRGM] menu with the asm() command
 
 ## Special Thanks
 
